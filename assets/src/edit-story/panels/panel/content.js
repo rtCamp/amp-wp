@@ -15,11 +15,11 @@ import { useContext } from '@wordpress/element';
 import panelContext from './context';
 
 const Form = styled.form`
-	margin: 10px 20px;
+	margin: ${ ( { padding } ) => padding || '10px 20px' };
 	overflow: auto;
 `;
 
-function Content( { children, ...rest } ) {
+function Content( { children, padding, ...rest } ) {
 	const { state: { isCollapsed, height } } = useContext( panelContext );
 
 	if ( isCollapsed ) {
@@ -31,7 +31,7 @@ function Content( { children, ...rest } ) {
 	};
 
 	return (
-		<Form style={ formStyle } { ...rest }>
+		<Form style={ formStyle } padding={ padding } { ...rest }>
 			{ children }
 		</Form>
 	);
@@ -42,6 +42,11 @@ Content.propTypes = {
 		PropTypes.arrayOf( PropTypes.node ),
 		PropTypes.node,
 	] ).isRequired,
+	padding: PropTypes.string,
+};
+
+Content.defaultProps = {
+	padding: null,
 };
 
 export default Content;
