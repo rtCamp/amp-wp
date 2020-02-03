@@ -497,23 +497,11 @@ class AMP_Theme_Support {
 			if ( $has_query_var || $has_url_param ) {
 				return self::redirect_non_amp_url( current_user_can( 'manage_options' ) ? 302 : 301, $exit );
 			}
-		} elseif ( self::READER_MODE_SLUG === self::get_support_mode() && is_singular() ) {
-			// Prevent infinite URL space under /amp/ endpoint.
-			global $wp;
-			$path_args = [];
-			wp_parse_str( $wp->matched_query, $path_args );
-			if ( isset( $path_args[ amp_get_slug() ] ) && '' !== $path_args[ amp_get_slug() ] ) {
-				wp_safe_redirect( amp_get_permalink( get_queried_object_id() ), 301 );
-				if ( $exit ) {
-					exit;
-				}
-				return true;
-			}
 		} elseif ( $has_query_var && ! $has_url_param ) {
 			/*
-			 * When in AMP transitional mode *with* theme support, then the proper AMP URL has the 'amp' URL param
-			 * and not the /amp/ endpoint. The URL param is now the exclusive way to mark AMP in transitional mode
-			 * when amp theme support present. This is important for plugins to be able to reliably call
+			 * When in AMP reader or transitional mode *with* theme support, then the proper AMP URL has the 'amp' URL
+			 * param and not the /amp/ endpoint. The URL param is now the exclusive way to mark AMP in reader mode &
+			 * transitional mode when amp theme support present. This is important for plugins to be able to reliably call
 			 * is_amp_endpoint() before the parse_query action.
 			 */
 			$old_url = amp_get_current_url();

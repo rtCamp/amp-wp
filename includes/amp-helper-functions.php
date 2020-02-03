@@ -1279,8 +1279,6 @@ function amp_add_admin_bar_view_link( $wp_admin_bar ) {
 
 	if ( is_amp_endpoint() ) {
 		$href = amp_remove_endpoint( amp_get_current_url() );
-	} elseif ( is_singular() ) {
-		$href = amp_get_permalink( get_queried_object_id() ); // For sake of Reader mode.
 	} else {
 		$href = add_query_arg( amp_get_slug(), '', amp_get_current_url() );
 	}
