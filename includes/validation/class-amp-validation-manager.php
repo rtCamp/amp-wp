@@ -390,7 +390,7 @@ class AMP_Validation_Manager {
 			$current_url
 		);
 		if ( ! amp_is_canonical() ) {
-			$amp_url = add_query_arg( amp_get_slug(), '', $amp_url );
+			$amp_url = amp_url( $amp_url );
 		}
 
 		$error_count = -1;

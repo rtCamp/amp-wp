@@ -383,7 +383,7 @@ class Test_AMP_Validation_Manager extends WP_UnitTestCase {
 		AMP_Validation_Manager::add_admin_bar_menu_items( $admin_bar );
 		$node = $admin_bar->get_node( 'amp' );
 		$this->assertInternalType( 'object', $node );
-		$this->assertStringEndsWith( '?amp', $node->href );
+		$this->assertStringEndsWith( '?amp=1', $node->href );
 		$this->assertInternalType( 'object', $admin_bar->get_node( 'amp-view' ) );
 		$this->assertInternalType( 'object', $admin_bar->get_node( 'amp-validity' ) );
 

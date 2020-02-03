@@ -6,7 +6,7 @@
  */
 
 $url     = remove_query_arg( AMP_Theme_Support::PAIRED_BROWSING_QUERY_VAR );
-$amp_url = add_query_arg( amp_get_slug(), '1', $url );
+$amp_url = amp_url( $url );
 ?>
 
 <!DOCTYPE html>

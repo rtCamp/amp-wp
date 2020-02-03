@@ -573,7 +573,7 @@ function amp_redirect_old_slug_to_new_url( $link ) {
 
 	if ( is_amp_endpoint() && ! amp_is_canonical() ) {
 		if ( current_theme_supports( AMP_Theme_Support::SLUG ) ) {
-			$link = add_query_arg( amp_get_slug(), '', $link );
+			$link = amp_url( $link );
 		} else {
 			$link = trailingslashit( trailingslashit( $link ) . amp_get_slug() );
 		}

@@ -173,7 +173,7 @@ class AMP_Link_Sanitizer extends AMP_Base_Sanitizer {
 
 				// Only add the AMP query var when requested (in Transitional or Reader mode).
 				if ( ! empty( $this->args['paired'] ) ) {
-					$href = add_query_arg( amp_get_slug(), '', $href );
+					$href = amp_url( $href );
 					$element->setAttribute( 'href', $href );
 				}
 			}

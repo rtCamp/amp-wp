@@ -366,7 +366,7 @@ class Test_AMP_Theme_Support extends WP_UnitTestCase {
 				return null;
 			}
 		);
-		$this->go_to( add_query_arg( amp_get_slug(), '', $requested_url ) );
+		$this->go_to( amp_url( $requested_url ) );
 		$this->assertTrue( $redirected );
 	}
 
@@ -385,7 +385,7 @@ class Test_AMP_Theme_Support extends WP_UnitTestCase {
 
 		// URL query param.
 		$_GET[ amp_get_slug() ] = '';
-		$_SERVER['REQUEST_URI'] = add_query_arg( amp_get_slug(), '', '/foo/bar' );
+		$_SERVER['REQUEST_URI'] = amp_url( '/foo/bar' );
 		try {
 			$this->assertTrue( AMP_Theme_Support::ensure_proper_amp_location( false ) );
 		} catch ( Exception $exception ) {
@@ -424,7 +424,7 @@ class Test_AMP_Theme_Support extends WP_UnitTestCase {
 
 		// URL query param, no redirection.
 		$_GET[ amp_get_slug() ] = '';
-		$_SERVER['REQUEST_URI'] = add_query_arg( amp_get_slug(), '', '/foo/bar' );
+		$_SERVER['REQUEST_URI'] = amp_url( '/foo/bar' );
 		$this->assertFalse( AMP_Theme_Support::ensure_proper_amp_location( false ) );
 
 		// Endpoint, redirect.
@@ -458,7 +458,7 @@ class Test_AMP_Theme_Support extends WP_UnitTestCase {
 		);
 
 		// Try AMP URL param.
-		$_SERVER['REQUEST_URI'] = add_query_arg( amp_get_slug(), '', '/foo/bar' );
+		$_SERVER['REQUEST_URI'] = amp_url( '/foo/bar' );
 		try {
 			$redirect_status_code = null;
 			$this->assertTrue( AMP_Theme_Support::redirect_non_amp_url( 302 ) );

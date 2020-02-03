@@ -71,7 +71,7 @@ function amp_get_permalink( $post_id ) {
 	if ( current_theme_supports( AMP_Theme_Support::SLUG ) ) {
 		$permalink = get_permalink( $post_id );
 		if ( ! amp_is_canonical() && AMP_Story_Post_Type::POST_TYPE_SLUG !== get_post_type( $post_id ) ) {
-			$permalink = add_query_arg( amp_get_slug(), '', $permalink );
+			$permalink = amp_url( $permalink );
 		}
 		return $permalink;
 	}
@@ -114,7 +114,7 @@ function amp_get_permalink( $post_id ) {
 			'attachment' === get_post_type( $post_id )
 		);
 		if ( $use_query_var ) {
-			$amp_url = add_query_arg( amp_get_slug(), '', $permalink );
+			$amp_url = amp_url( $permalink );
 		} else {
 			$amp_url = preg_replace( '/#.*/', '', $permalink );
 			$amp_url = trailingslashit( $amp_url ) . user_trailingslashit( amp_get_slug(), 'single_amp' );
@@ -179,7 +179,7 @@ function amp_add_amphtml_link() {
 	$amp_url = null;
 	if ( current_theme_supports( AMP_Theme_Support::SLUG ) ) {
 		if ( AMP_Theme_Support::is_paired_available() ) {
-			$amp_url = add_query_arg( amp_get_slug(), '', $current_url );
+			$amp_url = amp_url( $current_url );
 		}
 	} elseif ( is_singular() && post_supports_amp( get_post( get_queried_object_id() ) ) ) {
 		$amp_url = amp_get_permalink( get_queried_object_id() );
@@ -1280,7 +1280,7 @@ function amp_add_admin_bar_view_link( $wp_admin_bar ) {
 	if ( is_amp_endpoint() ) {
 		$href = amp_remove_endpoint( amp_get_current_url() );
 	} else {
-		$href = add_query_arg( amp_get_slug(), '', amp_get_current_url() );
+		$href = amp_url( amp_get_current_url() );
 	}
 
 	$icon = '&#x1F517;'; // LINK SYMBOL.
@@ -1356,6 +1356,29 @@ function amp_generate_script_hash( $script ) {
 		base64_encode( $sha384 ) // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
 	);
 	return 'sha384-' . $hash;
+}
+
+/**
+ * Get the AMP version of a URL.
+ *
+ * This simply appends the required query parameter to the URL. It does not confirm
+ * whether or not AMP is allowed on the given URL. If AMP is not supported, then a redirect
+ * to the non-AMP version will ensue.
+ *
+ * @see amp_get_permalink()
+ *
+ * @param string $url URL.
+ *
+ * @return string AMP URL.
+ */
+function amp_url( $url ) {
+	$pre_url = apply_filters( 'amp_pre_url', $url );
+
+	if ( $url !== $pre_url ) {
+		return $pre_url;
+	}
+
+	return apply_filters( 'amp_url', add_query_arg( amp_get_slug(), 1, $url ) );
 }
 
 /*
