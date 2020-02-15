@@ -46,7 +46,7 @@ function amp_admin_get_preview_permalink() {
 	/**
 	 * Filter the post type to retrieve the latest for use in the AMP template customizer.
 	 *
-	 * @param string $post_type Post type slug. Default 'post'.
+	 * @param null|string $post_type Post type slug. Default 'post'.
 	 */
 	$post_type = (string) apply_filters( 'amp_customizer_post_type', 'post' );
 
@@ -83,7 +83,7 @@ function amp_admin_get_preview_permalink() {
 	);
 
 	if ( empty( $post_ids ) ) {
-		return false;
+		return null;
 	}
 
 	$post_id = $post_ids[0];
