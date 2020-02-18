@@ -300,22 +300,14 @@ function is_amp_endpoint() {
 		return true;
 	}
 
-	$has_amp_query_var = (
-		isset( $_GET[ amp_get_slug() ] ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		||
-		(
-			$wp_query instanceof WP_Query
-			&&
-			false !== $wp_query->get( amp_get_slug(), false )
-		)
-	);
+	$is_amp_url = is_amp_url();
 
 	if ( ! current_theme_supports( AMP_Theme_Support::SLUG ) ) {
-		return $has_amp_query_var;
+		return $is_amp_url;
 	}
 
 	// When there is no query var and AMP is not canonical (AMP-first), then this is definitely not an AMP endpoint.
-	if ( ! $has_amp_query_var && ! amp_is_canonical() ) {
+	if ( ! $is_amp_url && ! amp_is_canonical() ) {
 		return false;
 	}
 
@@ -337,7 +329,7 @@ function is_amp_endpoint() {
 		$supported    = $availability['supported'];
 	}
 
-	return amp_is_canonical() ? $supported : ( $has_amp_query_var && $supported );
+	return amp_is_canonical() ? $supported : ( $is_amp_url && $supported );
 }
 
 /**
@@ -1359,6 +1351,15 @@ function amp_generate_script_hash( $script ) {
 }
 
 /**
+ * Get whether the AMP URL is overridden or not.
+ *
+ * @return bool
+ */
+function is_amp_url_overridden() {
+	return apply_filters( 'amp_override_url', false );
+}
+
+/**
  * Get the AMP version of a URL.
  *
  * This simply appends the required query parameter to the URL. It does not confirm
@@ -1372,13 +1373,39 @@ function amp_generate_script_hash( $script ) {
  * @return string AMP URL.
  */
 function amp_url( $url ) {
-	$pre_url = apply_filters( 'amp_pre_url', $url );
+	if ( is_amp_url_overridden() ) {
+		$new_url = apply_filters( 'amp_url', $url );
 
-	if ( $url !== $pre_url ) {
-		return $pre_url;
+		if ( $new_url !== $url ) {
+			return $new_url;
+		}
 	}
 
-	return apply_filters( 'amp_url', add_query_arg( amp_get_slug(), 1, $url ) );
+	return add_query_arg( amp_get_slug(), 1, $url );
+}
+
+/**
+ * Set the AMP endpoint.
+ */
+function amp_set_rewrite_rule() {
+	if ( is_amp_url_overridden() ) {
+		do_action( 'amp_set_rewrite_rule', amp_get_slug() );
+	} else {
+		add_rewrite_endpoint( amp_get_slug(), EP_PERMALINK );
+	}
+}
+
+/**
+ * Determine if the current request is for AMP or not.
+ *
+ * @return bool
+ */
+function is_amp_url() {
+	if ( is_amp_url_overridden() ) {
+		return true === apply_filters( 'is_amp_url', false, amp_get_current_url() );
+	}
+
+	return isset( $_GET[ amp_get_slug() ] ) && 1 === intval( $_GET[ amp_get_slug() ] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 }
 
 /*

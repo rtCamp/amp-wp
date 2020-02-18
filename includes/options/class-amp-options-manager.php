@@ -107,7 +107,7 @@ class AMP_Options_Manager {
 
 			// Flush rewrite rules, with ensuring up to date for website experience.
 			if ( self::is_website_experience_enabled() ) {
-				add_rewrite_endpoint( amp_get_slug(), EP_PERMALINK );
+				amp_set_rewrite_rule();
 				flush_rewrite_rules( false );
 			} else {
 				amp_deactivate(); // This will call flush_rewrite_rules( false ).

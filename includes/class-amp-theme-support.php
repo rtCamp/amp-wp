@@ -411,16 +411,13 @@ class AMP_Theme_Support {
 			add_filter( 'template_include', [ __CLASS__, 'serve_paired_browsing_experience' ] );
 		}
 
-		$has_query_var  = (
-			isset( $_GET[ amp_get_slug() ] ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			||
-			false !== get_query_var( amp_get_slug(), false )
-		);
+		$is_amp_url     = is_amp_url();
 		$is_reader_mode = self::READER_MODE_SLUG === self::get_support_mode();
+
 		if (
 			$is_reader_mode
 			&&
-			$has_query_var
+			$is_amp_url
 			&&
 			( ! is_singular() || ! post_supports_amp( get_post( get_queried_object_id() ) ) )
 		) {
@@ -436,7 +433,7 @@ class AMP_Theme_Support {
 			 * enabled by user ay any time, so they will be able to make AMP available for this URL and see the change
 			 * without wrestling with the redirect cache.
 			 */
-			if ( $has_query_var ) {
+			if ( $is_amp_url ) {
 				self::redirect_non_amp_url( current_user_can( 'manage_options' ) ? 302 : 301, true );
 			}
 
@@ -483,8 +480,7 @@ class AMP_Theme_Support {
 	 * @return bool Whether redirection was done. Naturally this is irrelevant if $exit is true.
 	 */
 	public static function ensure_proper_amp_location( $exit = true ) {
-		$has_query_var = false !== get_query_var( amp_get_slug(), false ); // May come from URL param or endpoint slug.
-		$has_url_param = isset( $_GET[ amp_get_slug() ] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$is_amp_url = is_amp_url();
 
 		if ( amp_is_canonical() || is_singular( AMP_Story_Post_Type::POST_TYPE_SLUG ) ) {
 			/*
@@ -494,10 +490,10 @@ class AMP_Theme_Support {
 			 * should happen infrequently. For admin users, this is kept temporary to allow them
 			 * to not be hampered by browser remembering permanent redirects and preventing test.
 			 */
-			if ( $has_query_var || $has_url_param ) {
+			if ( $is_amp_url ) {
 				return self::redirect_non_amp_url( current_user_can( 'manage_options' ) ? 302 : 301, $exit );
 			}
-		} elseif ( $has_query_var && ! $has_url_param ) {
+		} elseif ( ! $is_amp_url ) {
 			/*
 			 * When in AMP reader or transitional mode *with* theme support, then the proper AMP URL has the 'amp' URL
 			 * param and not the /amp/ endpoint. The URL param is now the exclusive way to mark AMP in reader mode &
