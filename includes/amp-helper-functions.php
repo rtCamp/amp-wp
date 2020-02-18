@@ -1374,7 +1374,7 @@ function is_amp_url_overridden() {
  */
 function amp_url( $url ) {
 	if ( is_amp_url_overridden() ) {
-		$new_url = apply_filters( 'amp_url', $url );
+		$new_url = apply_filters( 'amp_url', $url, amp_get_slug() );
 
 		if ( $new_url !== $url ) {
 			return $new_url;
@@ -1402,7 +1402,16 @@ function amp_set_rewrite_rule() {
  */
 function is_amp_url() {
 	if ( is_amp_url_overridden() ) {
-		return true === apply_filters( 'is_amp_url', false, amp_get_current_url() );
+		/**
+		 * Filters whether the current URL is AMP or not.
+		 *
+		 * @since 1.5.0
+		 *
+		 * @param false  $is_amp_url Whether current URL is AMP or not.
+		 * @param string $url        Current URL for the request.
+		 * @param string $amp_slug   AMP slug.
+		 */
+		return true === apply_filters( 'is_amp_url', false, amp_get_current_url(), amp_get_slug() );
 	}
 
 	return isset( $_GET[ amp_get_slug() ] ) && 1 === intval( $_GET[ amp_get_slug() ] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
