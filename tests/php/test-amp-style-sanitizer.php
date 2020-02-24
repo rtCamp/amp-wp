@@ -240,6 +240,13 @@ class AMP_Style_Sanitizer_Test extends WP_UnitTestCase {
 					'.lg\:w-full{width:100%}',
 				],
 			],
+			'semicolon_outside_of_rule_in_media_query'      => [
+				'<style>@media (max-width: 450px) { .sidebar { padding: 0; }; } .sidebar { margin: 0 auto; }</style><div class="sidebar"></div>',
+				'<div class="sidebar"></div>',
+				[
+					'@media (max-width: 450px){.sidebar{padding:0}}.sidebar{margin:0 auto}',
+				],
+			],
 		];
 	}
 
@@ -2220,7 +2227,7 @@ class AMP_Style_Sanitizer_Test extends WP_UnitTestCase {
 					add_action(
 						'wp_head',
 						static function() {
-							printf( '<style media=print id="early-print-style">html:after { content:"earlyprintstyle %s"; }</style>', esc_html( str_repeat( 'a', 49990 ) ) );
+							printf( '<style media=print id="early-print-style">html:after { content:"earlyprintstyle %s"; }</style>', esc_html( str_repeat( 'a', 75000 - 10 ) ) );
 						},
 						-1000
 					);
