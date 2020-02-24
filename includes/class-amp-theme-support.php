@@ -480,7 +480,6 @@ class AMP_Theme_Support {
 	 * @return bool Whether redirection was done. Naturally this is irrelevant if $exit is true.
 	 */
 	public static function ensure_proper_amp_location( $exit = true ) {
-		$is_amp_url = is_amp_url();
 
 		if ( amp_is_canonical() || is_singular( AMP_Story_Post_Type::POST_TYPE_SLUG ) ) {
 			/*
@@ -490,14 +489,14 @@ class AMP_Theme_Support {
 			 * should happen infrequently. For admin users, this is kept temporary to allow them
 			 * to not be hampered by browser remembering permanent redirects and preventing test.
 			 */
-			if ( $is_amp_url ) {
+			if ( is_amp_url() ) {
 				return self::redirect_non_amp_url( current_user_can( 'manage_options' ) ? 302 : 301, $exit );
 			}
-		} elseif ( ! $is_amp_url ) {
+		} elseif ( ! is_amp_url() ) {
 			/*
 			 * When in AMP reader or transitional mode *with* theme support, then the proper AMP URL has the 'amp' URL
 			 * param and not the /amp/ endpoint. The URL param is now the exclusive way to mark AMP in reader mode &
-			 * transitional mode when amp theme support present. This is important for plugins to be able to reliably call
+			 * transitional mode when amp theme support is present. This is important for plugins to be able to reliably call
 			 * is_amp_endpoint() before the parse_query action.
 			 */
 			$old_url = amp_get_current_url();

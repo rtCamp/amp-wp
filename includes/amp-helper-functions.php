@@ -1414,7 +1414,7 @@ function is_amp_url() {
 		return true === apply_filters( 'is_amp_url', false, amp_get_current_url(), amp_get_slug() );
 	}
 
-	return isset( $_GET[ amp_get_slug() ] ) && 1 === intval( $_GET[ amp_get_slug() ] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+	return 1 === (int) filter_input( INPUT_GET, amp_get_slug(), FILTER_SANITIZE_NUMBER_INT );
 }
 
 /*
