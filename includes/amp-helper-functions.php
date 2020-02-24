@@ -1389,6 +1389,13 @@ function amp_url( $url ) {
  */
 function amp_set_rewrite_rule() {
 	if ( is_amp_url_overridden() ) {
+		/**
+		 * Triggers whenever the AMP URL is overridden to allow a custom rewrite rule to be set.
+		 *
+		 * @since 1.5.0
+		 *
+		 * @param string $amp_slug AMP slug.
+		 */
 		do_action( 'amp_set_rewrite_rule', amp_get_slug() );
 	} else {
 		add_rewrite_endpoint( amp_get_slug(), EP_PERMALINK );

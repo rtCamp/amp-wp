@@ -480,7 +480,6 @@ class AMP_Theme_Support {
 	 * @return bool Whether redirection was done. Naturally this is irrelevant if $exit is true.
 	 */
 	public static function ensure_proper_amp_location( $exit = true ) {
-
 		if ( amp_is_canonical() || is_singular( AMP_Story_Post_Type::POST_TYPE_SLUG ) ) {
 			/*
 			 * When AMP-first/canonical, then when there is an /amp/ endpoint or ?amp URL param,
