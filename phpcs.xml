@@ -3,6 +3,8 @@
 
 	<!-- Exclude libraries that are meant to be externalized -->
 	<exclude-pattern>lib/*</exclude-pattern>
+	<!-- Exclude the QA tester plugin that is meant to be externalized -->
+	<exclude-pattern>qa-tester/*</exclude-pattern>
 
 	<!-- Exclude stub files as they are auto-generated -->
 	<exclude-pattern>tests/php/static-analysis-stubs/*</exclude-pattern>
