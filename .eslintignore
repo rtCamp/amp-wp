@@ -5,3 +5,4 @@
 !assets/js/amp-service-worker-runtime-precaching.js
 build/*
 lib/*
+qa-tester/
