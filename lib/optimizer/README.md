@@ -29,7 +29,7 @@ AMP Optimizer is a library for doing server-side optimization to AMP markup by a
 
 <!-- TODO: Once the repositories have been extracted out, all PHP references should link to the corresponding files in the repositories -->
 
-The AMP Optimizer is a `AmpProject\Optimizer\TransformationEngine` object that sets up a pipeline of consecutive `AmpProject\Optimizer\Transformer` objects. The engine takes unoptimized input in the form of either a HTML markup string or an `AmpProject\Dom\Document` object and turns it into an optimized HTML markup string.
+The AMP Optimizer is an `AmpProject\Optimizer\TransformationEngine` object that sets up a pipeline of consecutive `AmpProject\Optimizer\Transformer` objects. The engine takes unoptimized input in the form of either a HTML markup string or an `AmpProject\Dom\Document` object and turns it into an optimized HTML markup string.
 
 During the process, errors might occur that make parts of the optimization impossible. These are collected within an `AmpProject\Optimizer\ErrorCollection` object that you can then iterate over to find out more and provide feedback as needed.
 
@@ -142,7 +142,7 @@ Note that this only lets you check whether an error "category" popped up. It can
 
 You can inject a configuration object into the `AmpProject\Optimizer\TransformationEngine` to override the default configuration.
 
-The main `AmpProject\Optimizer\Configuration` object will provide the list of transformers to use, as well as give access to child objects it stores that are Transformaer-specific configuration objects.
+The main `AmpProject\Optimizer\Configuration` object will provide the list of transformers to use, as well as give access to child objects it stores that are Transformer-specific configuration objects.
 
 To override the list of transformers to use, you can provide an array containing the `AmpProject\Optimizer\Configuration::KEY_TRANSFORMERS` key.
 
