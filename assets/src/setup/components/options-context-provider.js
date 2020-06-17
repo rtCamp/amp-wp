@@ -8,6 +8,12 @@ import apiFetch from '@wordpress/api-fetch';
  * External dependencies
  */
 import PropTypes from 'prop-types';
+import { addQueryArgs } from '@wordpress/url';
+
+/**
+ * Internal dependencies
+ */
+import { useError } from '../utils/use-error';
 
 export const Options = createContext();
 
@@ -16,42 +22,19 @@ export const Options = createContext();
  *
  * @param {Object} props Component props.
  * @param {?any} props.children Component children.
- * @param {string} props.optionsKey The key of the option to use from the settings endpoint.
  * @param {string} props.optionsRestEndpoint REST endpoint to retrieve options.
  */
-export function OptionsContextProvider( { children, optionsKey, optionsRestEndpoint } ) {
+export function OptionsContextProvider( { children, optionsRestEndpoint } ) {
 	const [ options, setOptions ] = useState( null );
-	const [ fetchOptionsError, setFetchOptionsError ] = useState( null );
+	const [ fetchingOptions, setFetchingOptions ] = useState( false );
 	const [ savingOptions, setSavingOptions ] = useState( false );
-	const [ saveOptionsError, setSaveOptionsError ] = useState( null );
 	const [ hasChanges, setHasChanges ] = useState( false );
 	const [ hasSaved, setHasSaved ] = useState( false );
 
+	const { setError } = useError();
+
 	// This component sets state inside async functions. Use this ref to prevent state updates after unmount.
 	const hasUnmounted = useRef( false );
-
-	/**
-	 * Fetches plugin options from the REST endpoint.
-	 */
-	const fetchOptions = useCallback( async () => {
-		let fetchedOptions;
-
-		try {
-			fetchedOptions = await apiFetch( { url: optionsRestEndpoint } );
-
-			if ( true === hasUnmounted.current ) {
-				return;
-			}
-
-			setOptions( fetchedOptions[ optionsKey ] );
-		} catch ( e ) {
-			if ( true === hasUnmounted.current ) {
-				return;
-			}
-
-			setFetchOptionsError( e );
-		}
-	}, [ optionsKey, optionsRestEndpoint ] );
 
 	/**
 	 * Sends options to the REST endpoint to be saved.
@@ -62,22 +45,19 @@ export function OptionsContextProvider( { children, optionsKey, optionsRestEndpo
 		setSavingOptions( true );
 
 		try {
-			await apiFetch( { method: 'post', url: optionsRestEndpoint, data: { [ optionsKey ]: options } } );
+			await apiFetch( { method: 'post', url: addQueryArgs( optionsRestEndpoint, { 'amp-new-onboarding': '1' } ), data: options } );
 
 			if ( true === hasUnmounted.current ) {
 				return;
 			}
 		} catch ( e ) {
-			if ( true === hasUnmounted.current ) {
-				return;
-			}
-
-			setSaveOptionsError( e );
+			setError( e );
+			return;
 		}
 
 		setSavingOptions( false );
 		setHasSaved( true );
-	}, [ options, optionsKey, optionsRestEndpoint ] );
+	}, [ options, optionsRestEndpoint, setError ] );
 
 	/**
 	 * Updates options in state.
@@ -90,13 +70,36 @@ export function OptionsContextProvider( { children, optionsKey, optionsRestEndpo
 		}
 
 		setOptions( { ...options, ...newOptions } );
+		setHasSaved( false );
 	}, [ hasChanges, options, setHasChanges, setOptions ] );
 
 	useEffect( () => {
-		if ( ! options ) {
-			fetchOptions();
+		if ( options || fetchingOptions ) {
+			return;
 		}
-	}, [ fetchOptions, options ] );
+
+		/**
+		 * Fetches plugin options from the REST endpoint.
+		 */
+		( async () => {
+			setFetchingOptions( true );
+
+			try {
+				const fetchedOptions = await apiFetch( { url: addQueryArgs( optionsRestEndpoint, { 'amp-new-onboarding': '1' } ) } );
+
+				if ( true === hasUnmounted.current ) {
+					return;
+				}
+
+				setOptions( fetchedOptions );
+			} catch ( e ) {
+				setError( e );
+				return;
+			}
+
+			setFetchingOptions( false );
+		} )();
+	}, [ fetchingOptions, options, optionsRestEndpoint, setError ] );
 
 	useEffect( () => () => {
 		hasUnmounted.current = true;
@@ -106,13 +109,11 @@ export function OptionsContextProvider( { children, optionsKey, optionsRestEndpo
 		<Options.Provider
 			value={
 				{
-					fetchingOptions: null === options,
-					fetchOptionsError,
+					fetchingOptions,
 					hasChanges,
 					hasSaved,
 					options,
 					saveOptions,
-					saveOptionsError,
 					savingOptions,
 					updateOptions,
 				}
@@ -125,6 +126,5 @@ export function OptionsContextProvider( { children, optionsKey, optionsRestEndpo
 
 OptionsContextProvider.propTypes = {
 	children: PropTypes.any,
-	optionsKey: PropTypes.string.isRequired,
 	optionsRestEndpoint: PropTypes.string.isRequired,
 };

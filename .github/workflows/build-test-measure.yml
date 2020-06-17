@@ -17,7 +17,8 @@ jobs:
 
   dev-zip:
     name: Build dev build ZIP and upload as GHA artifact
-    if: github.event.pull_request.draft == false
+    # Only run if it is not a draft PR and the PR is not from a forked repository.
+    if: github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name == github.event.pull_request.base.repo.full_name
     runs-on: ubuntu-latest
     outputs:
       branch-name: ${{ steps.retrieve-branch-name.outputs.branch_name }}
@@ -88,7 +89,8 @@ jobs:
 
   prod-zip:
     name: Build prod build ZIP and upload as GHA artifact
-    if: github.event.pull_request.draft == false
+    # Only run if it is not a draft PR and the PR is not from a forked repository.
+    if: github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name == github.event.pull_request.base.repo.full_name
     runs-on: ubuntu-latest
     outputs:
       branch-name: ${{ steps.retrieve-branch-name.outputs.branch_name }}
@@ -218,7 +220,7 @@ jobs:
         id: get-comment-body
         # Setting a multi-line output requires escaping line-feeds. See <https://github.community/t/set-output-truncates-multiline-strings/16852/3>.
         run: |
-          body="Plugin builds for ${{ github.sha }} are ready :bellhop_bell:!
+          body="Plugin builds for ${{ github.event.pull_request.head.sha }} are ready :bellhop_bell:!
           - Download [development build](https://storage.googleapis.com/ampwp_github_artifacts/${{ github.ref }}/dev/amp.zip)
           - Download [production build](https://storage.googleapis.com/ampwp_github_artifacts/${{ github.ref }}/prod/amp.zip)"
           body="${body//$'\n'/'%0A'}"
