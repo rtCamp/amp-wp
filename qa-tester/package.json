@@ -13,7 +13,7 @@
     "url": "https://github.com/ampproject/amp-wp/issues"
   },
   "dependencies": {
-    "@reach/combobox": "^0.14.0",
+    "@reach/combobox": "^0.15.1",
     "@wordpress/api-fetch": "^3.21.5",
     "@wordpress/dom-ready": "^2.12.1",
     "@wordpress/element": "^2.19.1",
