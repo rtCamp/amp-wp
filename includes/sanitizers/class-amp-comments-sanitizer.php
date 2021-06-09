@@ -24,7 +24,7 @@ class AMP_Comments_Sanitizer extends AMP_Base_Sanitizer {
 	 * @var array
 	 */
 	protected $DEFAULT_ARGS = [
-		'comment_live_list' => false,
+		'comments_live_list' => false,
 	];
 
 	/**
