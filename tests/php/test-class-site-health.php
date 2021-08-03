@@ -104,6 +104,7 @@ class Test_Site_Health extends WP_UnitTestCase {
 	 * Test persistent_object_cache.
 	 *
 	 * @covers \AmpProject\AmpWP\Admin\SiteHealth::persistent_object_cache()
+	 * @covers \AmpProject\AmpWP\Admin\SiteHealth::check_available_cache()
 	 */
 	public function test_persistent_object_cache() {
 		$data = [
