@@ -5,7 +5,7 @@
     "development": {
       "plugins": [
         ".",
-        "https://downloads.wordpress.org/plugin/gutenberg.zip",
+        "https://downloads.wordpress.org/plugin/gutenberg.21.0.0.zip",
         "https://downloads.wordpress.org/plugin/pwa.zip"
       ]
     },
@@ -26,7 +26,7 @@
       ],
       "plugins": [
         ".",
-        "https://downloads.wordpress.org/plugin/gutenberg.zip",
+        "https://downloads.wordpress.org/plugin/gutenberg.21.0.0.zip",
         "https://downloads.wordpress.org/plugin/pwa.zip"
       ],
       "mappings": {
