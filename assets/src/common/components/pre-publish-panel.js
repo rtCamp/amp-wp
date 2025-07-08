@@ -1,8 +1,7 @@
 /**
  * WordPress dependencies
  */
-import { PostFeaturedImage } from '@wordpress/editor';
-import { PluginPrePublishPanel } from '@wordpress/edit-post';
+import { PostFeaturedImage, PluginPrePublishPanel } from '@wordpress/editor';
 import { __ } from '@wordpress/i18n';
 
 /**

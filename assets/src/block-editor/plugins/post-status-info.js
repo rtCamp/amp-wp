@@ -1,7 +1,7 @@
 /**
  * WordPress dependencies
  */
-import { PluginPostStatusInfo } from '@wordpress/edit-post';
+import { PluginPostStatusInfo } from '@wordpress/editor';
 import { useSelect } from '@wordpress/data';
 
 /**
