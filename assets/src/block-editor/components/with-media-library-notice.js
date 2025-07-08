@@ -148,7 +148,7 @@ export default (InitialMediaUpload, minImageDimensions) => {
 	/**
 	 * Extends the MediaUpload component to display a notice for small images.
 	 */
-	return class FeaturedImageMediaUpload extends InitialMediaUpload {
+	const FeaturedImageMediaUpload = class extends InitialMediaUpload {
 		/**
 		 * Initializes the Media Library requirements for the featured image flow.
 		 *
@@ -175,5 +175,10 @@ export default (InitialMediaUpload, minImageDimensions) => {
 			});
 			wp.media.frame = this.frame;
 		}
+	};
+
+	// Return a function that properly instantiates the class
+	return function (props) {
+		return new FeaturedImageMediaUpload(props);
 	};
 };
