@@ -40,7 +40,7 @@ export async function setTemplateMode(mode) {
 export async function isPluginInstalled(slug, settings) {
 	await switchUserToAdmin();
 	await visitAdminPage('plugins.php', '');
-	await page.waitForSelector('h1', { text: 'Plugins' });
+	await page.waitForSelector('h1', { text: 'Plugins' }, { visible: true });
 
 	const found = await page.$(
 		`tr${settings?.checkIsActivated ? '.active' : ''}[data-slug="${slug}"]`
