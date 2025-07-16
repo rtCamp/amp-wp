@@ -19,7 +19,11 @@ describe('AMP settings screen reader themes carousel', () => {
 
 		await expect(page).toMatchElement('.amp-carousel__carousel');
 		await expect(page).toMatchElement('#theme-card__twentynineteen');
-		await expect(page).toClick('#theme-card__twentynineteen');
+
+		await page.evaluate((selector) => {
+			document.querySelector(selector).click();
+		}, '#theme-card__twentynineteen');
+
 		await expect(page).toMatchElement(
 			'#theme-card__twentynineteen:checked'
 		);

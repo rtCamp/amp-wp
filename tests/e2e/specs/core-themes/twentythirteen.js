@@ -78,7 +78,10 @@ describe('Twenty Thirteen theme on AMP', () => {
 			await expect(page).toClick('#site-navigation .menu-toggle');
 
 			await page.waitForSelector(
-				'#site-navigation .nav-menu .menu-item-has-children'
+				'#site-navigation .nav-menu .menu-item-has-children',
+				{
+					visible: true,
+				}
 			);
 
 			const menuItemWithSubmenu = await page.$(
