@@ -1,5 +1,5 @@
 export async function testSiteScanning({ statusElementClassName, isAmpFirst }) {
-	await page.waitForSelector(`.${statusElementClassName}`);
+	await page.waitForSelector(`.${statusElementClassName}`, { visible: true });
 
 	const statusTextRegex = /^Scanning ([\d])+\/([\d]+) URLs/;
 	const statusText = await page.$eval(
